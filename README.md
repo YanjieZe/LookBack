@@ -13,7 +13,7 @@ LookBack is a native Mac app that uses **AirPods head tracking** to blur your sc
 
 - Blur across connected displays when you turn left, right, up, or down; clear the screen when you return.
 - One-click calibration to define your forward-facing pose.
-- Adjustable trigger angle (**15–60°**) and delay (**0.2–2 seconds**).
+- Independent horizontal and vertical trigger angles (each **15–60°**, default **15°**) and delay (**0.2–2 seconds**).
 - Live head angles, motion permission, headphone connection status, and received sample count.
 - Two-second blur preview, pause/resume, and a one-minute break.
 - Close **×** to hide the window and keep tracking. Click the Dock icon to reopen. **⌘Q** quits and removes the overlay.
@@ -63,7 +63,7 @@ To compile without replacing your installed app, or run the trigger tests:
 4. Face the screen and click **校准当前朝向** (Calibrate).
 5. Turn your head away, then look back.
 
-The interface is currently in Simplified Chinese. By default, a turn greater than **15°** for **0.6 seconds** activates the overlay. Returning below **7°** for **0.25 seconds** clears it. This margin prevents flickering near the threshold.
+The interface is currently in Simplified Chinese. By default, either axis exceeding its own **15°** threshold for **0.6 seconds** activates the overlay. Both axes returning below **7°** for **0.25 seconds** clears it. Each axis clears below its own threshold minus 8°. This margin prevents flickering near the threshold.
 
 Recalibrate after moving your chair or reconnecting your headphones. Settings and calibration are currently session-only. **Esc**, while the app is focused, pauses detection for one minute. Pausing leaves motion collection running; quitting stops it.
 
@@ -98,6 +98,7 @@ Sources/
   HeadPose.swift      Calibrated orientation model
   AudioRoute.swift    Bluetooth audio device detection
   DwellTrigger.swift  Dwell and hysteresis state machine
+  HeadTurnTrigger.swift Independent yaw/pitch thresholds
   WindowBlur.swift    WindowServer blur adapter
 Tests/main.swift      Trigger behavior tests
 Resources/AppIcon.icns

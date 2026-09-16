@@ -74,7 +74,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let diagnostics = NSTextField(labelWithString: "")
     let status = NSTextField(wrappingLabelWithString: "准备就绪 · 请先连接 AirPods")
     let angles = NSTextField(labelWithString: "左右 —°     上下 —°")
-    let thresholdLabel = NSTextField(labelWithString: "15°")
+    let yawThresholdLabel = NSTextField(labelWithString: "15°")
+    let pitchThresholdLabel = NSTextField(labelWithString: "15°")
     let delayLabel = NSTextField(labelWithString: "0.6 秒")
     var toggle: NSButton!
     var calibrateButton: NSButton!
@@ -85,7 +86,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     var lastSample = 0.0
     var enabled = false
     var suspendedUntil = 0.0
-    var trigger = DwellTrigger(threshold: 15, enterDwell: 0.6)
+    var trigger = HeadTurnTrigger()
     var timer: Timer?
     var previewTimer: Timer?
     var started = false
@@ -144,12 +145,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         angles.frame = NSRect(x: 32, y: 341, width: 576, height: 40)
         angles.font = .monospacedDigitSystemFont(ofSize: 27, weight: .medium); root.addSubview(angles)
         label("佩戴耳机并正对屏幕后校准。重新连接或移动座位后，请再次校准。", 32, 310, 576, 24, 12)
-        label("转头触发角度", 32, 263, 240, 22, 14, .semibold)
-        thresholdLabel.frame = NSRect(x: 526, y: 263, width: 82, height: 22)
-        thresholdLabel.alignment = .right; root.addSubview(thresholdLabel)
-        let threshold = NSSlider(value: 15, minValue: 15, maxValue: 60, target: self, action: #selector(changeThreshold(_:)))
-        threshold.frame = NSRect(x: 32, y: 230, width: 576, height: 24)
-        threshold.setAccessibilityLabel("转头触发角度"); root.addSubview(threshold)
+        label("左右转头阈值", 32, 263, 196, 22, 14, .semibold)
+        yawThresholdLabel.frame = NSRect(x: 240, y: 263, width: 68, height: 22)
+        yawThresholdLabel.alignment = .right; root.addSubview(yawThresholdLabel)
+        let yawSlider = NSSlider(value: trigger.yawThreshold, minValue: 15, maxValue: 60, target: self, action: #selector(changeYawThreshold(_:)))
+        yawSlider.frame = NSRect(x: 32, y: 230, width: 276, height: 24)
+        yawSlider.setAccessibilityLabel("左右转头阈值"); root.addSubview(yawSlider)
+        label("上下抬低头阈值", 332, 263, 200, 22, 14, .semibold)
+        pitchThresholdLabel.frame = NSRect(x: 540, y: 263, width: 68, height: 22)
+        pitchThresholdLabel.alignment = .right; root.addSubview(pitchThresholdLabel)
+        let pitchSlider = NSSlider(value: trigger.pitchThreshold, minValue: 15, maxValue: 60, target: self, action: #selector(changePitchThreshold(_:)))
+        pitchSlider.frame = NSRect(x: 332, y: 230, width: 276, height: 24)
+        pitchSlider.setAccessibilityLabel("上下抬低头阈值"); root.addSubview(pitchSlider)
         label("持续多久后模糊", 32, 194, 240, 22, 14, .semibold)
         delayLabel.frame = NSRect(x: 506, y: 194, width: 102, height: 22)
         delayLabel.alignment = .right; root.addSubview(delayLabel)
@@ -200,9 +207,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         suspendedUntil = ProcessInfo.processInfo.systemUptime + 60; clear()
         status.stringValue = "已暂停 1 分钟 · 屏幕清晰"
     }
-    @objc func changeThreshold(_ slider: NSSlider) {
-        trigger.threshold = slider.doubleValue.rounded()
-        thresholdLabel.stringValue = String(format: "%.0f°", trigger.threshold); clear()
+    @objc func changeYawThreshold(_ slider: NSSlider) {
+        trigger.yawThreshold = slider.doubleValue.rounded()
+        yawThresholdLabel.stringValue = String(format: "%.0f°", trigger.yawThreshold); clear()
+    }
+    @objc func changePitchThreshold(_ slider: NSSlider) {
+        trigger.pitchThreshold = slider.doubleValue.rounded()
+        pitchThresholdLabel.stringValue = String(format: "%.0f°", trigger.pitchThreshold); clear()
     }
     @objc func changeDelay(_ slider: NSSlider) {
         trigger.enterDwell = (slider.doubleValue * 10).rounded() / 10
@@ -228,7 +239,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         guard enabled else { status.stringValue = "检测已暂停 · 屏幕清晰"; clear(); return }
         guard reference != nil else { status.stringValue = "AirPods 已连接 · 请正对屏幕，点击校准"; clear(); return }
         guard let latest else { clear(); return }
-        if trigger.update(max(abs(latest.0), abs(latest.1)), at: now) { overlay.set(trigger.isActive) }
+        if trigger.update(yaw: latest.0, pitch: latest.1, at: now) { overlay.set(trigger.isActive) }
         status.stringValue = overlay.active ? (overlay.blurAvailable ? "已转开 · 屏幕模糊" : "已转开 · 屏幕压暗") : "正在检测 · 屏幕清晰"
     }
     func windowShouldClose(_ sender: NSWindow) -> Bool {
