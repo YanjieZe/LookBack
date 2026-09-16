@@ -107,7 +107,7 @@ Assets/               Logo source and generation notes
 
 Build and trigger tests have passed locally on Apple Silicon. AirPods streaming, calibration, and turn-away behavior have also been exercised with a real device. The automated tests cover the trigger state machine; they do not simulate Bluetooth hardware or validate WindowServer rendering.
 
-Contributions are welcome when the repository is shared. For bugs, include your macOS version, AirPods model, displayed permission/connection state, sample count behavior, and reproduction steps. Do not include credentials or unredacted personal logs. Before submitting changes, run `./build.sh --check` and `./test.sh`.
+Contributions are welcome. For bugs, include your macOS version, AirPods model, displayed permission/connection state, sample count behavior, and reproduction steps. Do not include credentials or unredacted personal logs. Before submitting changes, run `./build.sh --check` and `./test.sh`.
 
 ## Credits and license
 
@@ -115,4 +115,4 @@ LookBack builds on [HeadOrbit by Cogria-AI](https://github.com/Cogria-AI/HeadOrb
 
 LookBack's additions include the standalone AppKit interface, Dock lifecycle, diagnostics, connection handling changes, and application branding. The logo was created with an AI image-generation tool; the [prompt and asset notes](Assets/logo-notes.md) are included.
 
-Released under the [MIT License](LICENSE). Repository visibility is managed separately: this repository is initially private.
+Open source under the [MIT License](LICENSE).

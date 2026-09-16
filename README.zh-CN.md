@@ -101,4 +101,4 @@ open /Applications/LookBack.app
 
 回望增加独立 GUI、Dock 窗口行为、连接诊断与部分连接处理改进，以及应用视觉标识。Logo 由 AI 图像生成工具制作，[提示词与说明](Assets/logo-notes.md) 随源码提供。
 
-项目采用 [MIT License](LICENSE)。许可与仓库可见性分开管理：仓库初始设为私有，之后可再公开。
+项目以 [MIT License](LICENSE) 开源，欢迎提交 Issue 和 Pull Request。
