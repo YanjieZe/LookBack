@@ -74,7 +74,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let diagnostics = NSTextField(labelWithString: "")
     let status = NSTextField(wrappingLabelWithString: "准备就绪 · 请先连接 AirPods")
     let angles = NSTextField(labelWithString: "左右 —°     上下 —°")
-    let thresholdLabel = NSTextField(labelWithString: "30°")
+    let thresholdLabel = NSTextField(labelWithString: "15°")
     let delayLabel = NSTextField(labelWithString: "0.6 秒")
     var toggle: NSButton!
     var calibrateButton: NSButton!
@@ -85,7 +85,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     var lastSample = 0.0
     var enabled = false
     var suspendedUntil = 0.0
-    var trigger = DwellTrigger(threshold: 30, enterDwell: 0.6)
+    var trigger = DwellTrigger(threshold: 15, enterDwell: 0.6)
     var timer: Timer?
     var previewTimer: Timer?
     var started = false
@@ -147,7 +147,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         label("转头触发角度", 32, 263, 240, 22, 14, .semibold)
         thresholdLabel.frame = NSRect(x: 526, y: 263, width: 82, height: 22)
         thresholdLabel.alignment = .right; root.addSubview(thresholdLabel)
-        let threshold = NSSlider(value: 30, minValue: 15, maxValue: 60, target: self, action: #selector(changeThreshold(_:)))
+        let threshold = NSSlider(value: 15, minValue: 15, maxValue: 60, target: self, action: #selector(changeThreshold(_:)))
         threshold.frame = NSRect(x: 32, y: 230, width: 576, height: 24)
         threshold.setAccessibilityLabel("转头触发角度"); root.addSubview(threshold)
         label("持续多久后模糊", 32, 194, 240, 22, 14, .semibold)

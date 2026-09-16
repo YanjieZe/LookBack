@@ -63,7 +63,7 @@ To compile without replacing your installed app, or run the trigger tests:
 4. Face the screen and click **校准当前朝向** (Calibrate).
 5. Turn your head away, then look back.
 
-The interface is currently in Simplified Chinese. By default, a turn greater than **30°** for **0.6 seconds** activates the overlay. Returning below **22°** for **0.25 seconds** clears it. This margin prevents flickering near the threshold.
+The interface is currently in Simplified Chinese. By default, a turn greater than **15°** for **0.6 seconds** activates the overlay. Returning below **7°** for **0.25 seconds** clears it. This margin prevents flickering near the threshold.
 
 Recalibrate after moving your chair or reconnecting your headphones. Settings and calibration are currently session-only. **Esc**, while the app is focused, pauses detection for one minute. Pausing leaves motion collection running; quitting stops it.
 
